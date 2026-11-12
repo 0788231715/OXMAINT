@@ -13,6 +13,27 @@ from backend.app.modules.asset_management.api.assets import (
 from backend.app.modules.service_requests.api.service_requests import (
     router as service_requests_router,
 )
+from backend.app.modules.incident_management.api.incidents import (
+    router as incidents_router,
+)
+from backend.app.modules.maintenance_calendar.api.work_orders import (
+    router as maintenance_work_orders_router,
+)
+from backend.app.modules.coordination.api.coordination import (
+    router as coordination_router,
+)
+from backend.app.modules.reports.api.reports import (
+    router as reports_router,
+)
+from backend.app.modules.ai_insights.api.insights import (
+    router as ai_insights_router,
+)
+from backend.app.modules.operations_map.api.operations_map import (
+    router as operations_map_router,
+)
+from backend.app.modules.synchronization.api.synchronization import (
+    router as synchronization_router,
+)
 from backend.app.modules.user_management.api.auth import (
     router as auth_router,
 )
@@ -59,6 +80,41 @@ app.include_router(
 
 app.include_router(
     service_requests_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    incidents_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    maintenance_work_orders_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    coordination_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    reports_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    ai_insights_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    operations_map_router,
+    prefix=settings.API_V1_PREFIX,
+)
+
+app.include_router(
+    synchronization_router,
     prefix=settings.API_V1_PREFIX,
 )
 

@@ -10,7 +10,10 @@ from backend.app.database.models.identity import Role, User, UserRoleAssignment
 from backend.app.database.models.organization import Organization
 from backend.app.config import settings
 from backend.app.database.connection import get_db
-from backend.app.modules.user_management.schemas.auth import TokenResponse
+from backend.app.modules.user_management.schemas.auth import (
+    TokenResponse,
+    UserProfileUpdate,
+)
 from backend.app.modules.user_management.services.auth_service import (
     authenticate_user,
     generate_user_access_token,
@@ -55,15 +58,36 @@ def get_authenticated_user(
     }
 
 
+@router.patch("/me")
+def update_authenticated_user(
+    data: UserProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    current_user.display_name = data.display_name
+    db.commit()
+    db.refresh(current_user)
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "display_name": current_user.display_name,
+        "is_active": current_user.is_active,
+        "is_system_admin": current_user.is_system_admin,
+    }
+
+
 @router.get("/organizations")
 def get_user_organizations(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     now = datetime.now(timezone.utc)
-    statement = select(Organization.id, Organization.name, Organization.code).where(
-        Organization.is_active.is_(True)
-    )
+    statement = select(
+        Organization.id,
+        Organization.name,
+        Organization.code,
+        Organization.description,
+    ).where(Organization.is_active.is_(True))
     if not current_user.is_system_admin:
         statement = (
             statement
@@ -89,8 +113,11 @@ def get_user_organizations(
             "id": str(row.id),
             "name": row.name,
             "code": row.code,
+            "description": row.description,
             "can_register_users": current_user.is_system_admin
             or has_permission(db, current_user.id, row.id, "users.create"),
+            "can_update": current_user.is_system_admin
+            or has_permission(db, current_user.id, row.id, "organizations.update"),
         }
         for row in organizations
     ]

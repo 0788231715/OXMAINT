@@ -1,6 +1,7 @@
 ﻿
 from pathlib import Path
 
+from pydantic import SecretStr
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -26,6 +27,8 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str = DEVELOPMENT_SECRET_KEY
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    OPENAI_API_KEY: SecretStr | None = None
+    OPENAI_MODEL: str = "gpt-4o-mini"
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),

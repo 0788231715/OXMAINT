@@ -1,0 +1,17 @@
+{
+  "name": "OxMaint Operations",
+  "short_name": "OxMaint",
+  "description": "Operations, Support and Resilience Platform",
+  "theme_color": "#102b4b",
+  "background_color": "#f3f6fa",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/oxmaint-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
